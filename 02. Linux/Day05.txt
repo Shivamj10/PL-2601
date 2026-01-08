@@ -1,0 +1,144 @@
+Module 2: Linux Fundamentals | Day 05 | 08-01-2025
+============================================================================================================
+mv dir1 folder1
+mv kastro.txt linux.txt
+
+mv /home/ec2-user/linux.txt /home/ec2-user/folder1/
+mv /home/ec2-user/dir2/ /home/ec2-user/folder1/
+
+sort kastro.txt
+sort -r kastro.txt
+
+sort kastro.txt > sorted.txt
+sort -r kastro.txt > reverse-sorted.txt
+
+sort kastro.txt | uniq 
+
+cp kastro.txt kastro.txt_bkp
+
+>kastro.txt
+
+cat kastro.txt_bkp > kastro.txt
+
+cp kastro.txt kiran.txt
+cp kastro.txt kiran.txt Linux
+cp -r linux/ day4/
+
+cat kastro.txt kiran.txt > kk.txt
+
+head kastro.txt
+tail kastro.txt
+
+head -n 5 kastro.txt
+head -5 kastro.txt
+
+tail -n 5 kastro.txt
+tail -5 kastro.txt
+
+head kastro.txt numbers.txt
+tail kastro.txt numbers.txt
+
+head -5 kastro.txt numbers.txt
+
+head -n 10 kastro.txt | tail -n 7
+head -n 12 kastro.txt | tail -n 5
+
+wc kastro.txt
+wc -l kastro.txt
+wc -w kastro.txt
+wc -c kastro.txt
+wc -lw kastro.txt
+wc -lc kastro.txt
+
+shift+a
+shift+i
+shift+o
+shift+g
+:set number
+:<LineNumber>
+yy
+p
+dd
+u
+control+r
+5dd
+4dd
+/<WordName>
+:%d
+
+
+=====================================
+Understanding File/Directory Sizes
+=====================================
+mkdir -p ~/linux-lab/{logs,configs,data,temp}
+cd ~/linux-lab
+
+echo "This is app log file" > logs/app.log
+echo "This is error log file" > logs/error.log
+echo "api_key=ABCD1234" > configs/app.conf
+echo "user database content" > data/users.txt
+
+Create a large fake file (simulate artifacts/backups)
+👉 DevOps style – create dummy 3MB file:
+dd if=/dev/zero of=data/bigfile.img bs=1M count=3
+✅ dd
+A low-level data copy tool
+
+Create many files quickly:
+touch temp/file{1..10}.txt
+
+du -sh *
+du -sh ~/linux-lab
+du -sh ~/linux-lab/*
+
+find . -type f -mmin -5
+
+find . -type f -size +2M
+
+uptime
+who
+w
+
+pkill -kill -t pts/0
+
+GREP - Global Regular Expression Print
+GREP is used to search for a word
+
+grep "Linux" file1.txt
+grep -i "Linux" file1.txt
+
+grep -n "Linux" file1.txt
+grep -n -i "Linux" file1.txt
+
+grep "SSH" *.txt
+
+grep -c "Linux" file1.txt
+grep -c -i "Linux" file1.txt
+
+grep -r "ERROR"
+
+grep -v "Linux" file1.txt
+
+grep "^L" file1.txt
+
+grep "powerful$" file2.txt
+
+grep -E "ERROR|WARNING" log/app.log
+
+grep -A2 "ERROR" log/app.log
+
+grep -B1 "ERROR" log/app.log
+
+grep -C1 "ERROR" log/app.log
+
+
+
+
+
+
+
+
+
+
+
+
