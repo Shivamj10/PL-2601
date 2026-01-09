@@ -1,0 +1,134 @@
+Module 2: Linux Fundamentals | Day 06 | 09-01-2025
+============================================================================================================
+Shell Scripting: https://youtube.com/playlist?list=PLs-PsDpuAuTeT2iRQpNs0sl-sXFD10I1C&si=jCej5iA2wtdEnXHX
+GitHub Repo: https://github.com/KastroVKiran/ShellScriptingforDevOpsEngineering.git
+
+SED - Stream Editor
+It is used to process the data (s- substitute, d- delete , p - print, i - insert) without opening the file
+
+sed -n '3p' students.txt
+sed -n '5p' students.txt
+
+sed '1d' students.txt
+cat students.txt
+sed -i '1d' students.txt
+cat students.txt
+
+sed -i '2,3d' students.txt
+
+sed -i.bak '1d' students.txt
+
+sed '1d' students.txt > temp.txt
+
+sed 's/John/Kastro/' students.txt
+sed 's/Doe/Kiran/g' students.txt
+sed -i 's/John/Kastro/' students.txt
+
+sed -i.bak 's/Kastro/Kiran/ig' students.txt
+
+sed '/Ravi Kumar/i ---- Ravi is learning linux ----' students.txt
+sed '/Ravi Kumar/a ---- Ravi is learning linux ----' students.txt
+
+sed '2c Kastro Kiran' students.txt
+
+sed '/^$/d' kiran.txt
+
+script
+
+File Permissions in Linux
+The file permissions are categorized into 3 ways;
+users (u)		- read (r), write (w), execute (x)
+group (g)	- read (r), write (w), execute (x)
+others (o)	- read (r), write (w), execute (x)
+
+rw-r--r--		kiran.txt
+
+For users ----> read and write
+For group ----> only read
+For others ----> Only read
+
+default permissions for a file			- rw-r--r--
+default permissions for a directory		- rwxr-xr-x
+
+To edit the file permissions we will use "chmod" command
+chmod u+x kiran.txt
+chmod g+wx kiran.txt
+chmod o+wx kiran.txt
+chmod u-x kiran.txt
+chmod g-rwx kiran.txt
+chmod o-rx kiran.txt
+
+File permissions using numbers
+0 - no permissions
+1 - execute
+2 - write
+3 - 2 + 1 - write + execute
+4 - read
+5 - 4 + 1 - read + execute
+6 - 4 + 2 - read + write
+7 - 6 + 1 - read + write + execute
+
+ugo+x
+chmod 111 
+
+ugo+w
+chmod 222
+
+chmod 765
+chmod 777
+chmod 007
+chmod 465
+chmod 7
+chmod 2
+chmod 22
+chmod 41
+
+User permissions
+
+Group Permissions
+
+Systemctl in Linux
+it is used to manage services in Linux machines
+start a service
+stop a service
+install a service
+reload a service
+restart a service
+
+services like; apache, nginx, Jenkins, docker....
+
+Networking Commands
+ping
+wget
+curl
+ifconfig
+
+Transferring the files from VM to local and local to VM
+WinSCP
+
+Setting the hostname
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
