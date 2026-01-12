@@ -28,4 +28,7 @@ A comprehensive 35-day DevOps training program covering essential tools and prac
 | **08 Jan 2026** | Linux – Part 3 | `sort`, `cp`, `mv`, `grep`, `vi` editor, file utilities | ✅ Completed |
 | **09 Jan 2026** | Linux – Part 4 | `sed`, `script`, file permissions, user permissions `chown`, `chmod`, `systemctl` networking commands, systemctl, file transfer, hostname | ✅ Completed |
 
-
+### **Phase 2: Git & GitHub** 
+| Date | Module | Topics Covered | Status |
+|------|--------|----------------|--------|
+| **12 Jan 2026** | Git and GitHub_Part 1 | Introduction to VCS, Types, Installation of Git on Local and VM, Configuration, Git Workflow & Stages, `git commands`, `git log`, `git show`,| ✅ Completed |
