@@ -1,0 +1,110 @@
+Module 2: Git and GitHub | Day 08 | 13-01-2025
+============================================================================================================
+Changing the commit messages;
+git commit --amend -m "my third commit: line 3"
+
+git rebase -i HEAD~<Number> ---> pick -- reword
+
+git rebase -i --root
+
+GIT CHECKOUT
+Case 1 - Rollback to previous versions of code
+25626f4 version 3 commit ----> 3 lines of code - version 3, version 2, version 1
+5f5d663 version 2 commit ----> 2 lines of code - version 2, version 1
+f3b8b44 version 1 commit ----> 1 line of code - version 1
+
+git checkout 5f5d663 -- index.html
+
+git checkout master -- index.html
+
+Case 2 - To recover the deleted file
+ git checkout HEAD -- kastro.html
+
+Case 3 - To switch from one branch to another branch
+
+GIT RESTORE
+To restore the changes made to the code
+Case 1 - How to restore a staged file (the file is not committed)
+git reset restore.html
+OR
+git restore --staged restore.html
+
+Case 2 - restore to the old version of the code
+git restore --source=7492e32 demo.txt
+
+Case 3 - Uncommit a committed file
+git update-ref -d HEAD
+
+GIT STASH
+09.00 AM ---> Task: Create a file and write some payments page feature code ---> Start working on the task ---> 10.00 AM (still doing the task)
+10.00 AM ---> New task: create a text file and write sample data - Immediate priority
+
+If the code is still being edited, never add and commit such incomplete code - the working functionality of the app will breakdown
+To store the file in a temporary location - git stash [Note: You cannot access that temporary location]
+
+Go to the new task and complete it
+Switch back to the old task which is stored in stashing area
+
+Git stash will store the partially compelted tasks in a temporary location
+
+git stash
+  664  cat amazon.py
+  665  git status
+  666  git stash list
+  667  ls
+  668  vi test.java
+  669  git status
+  670  git add .
+  671  git commit -m "java file"
+  672  git status
+  673  git stash list
+  674  git stash stash@{0}
+  675  ls
+  676  cat amazon.py
+  677  git status
+  678  git stash 0
+  679  git stash apply stash@{0}
+  680  ls
+  681  cat amazon.py
+  682  vi amazon.py
+  683  git add .
+  684  git commit -m "amazon code"
+  685  git status
+
+Git Reset: Soft Reset & Hard Reset
+git reset moves the HEAD pointer backward
+But how much data it keeps or deletes is dependents on
+--soft
+--hard
+
+Git Soft Reset (--soft)
+What it does is;
+	moves HEAD to previous commit 
+	keeps changes in staging area
+	keeps the files unchanged (data inside the file will remain)
+
+git reset --soft <commit-id>
+
+Git Hard Reset (--hard)
+What it does is;
+	moves HEAD to previous commit
+	clears the staging area
+	deletes working directory changes (data will get deleted)
+
+git reset --hard <commit-id>
+
+Git Revert
+It will undo a commit safely by creating a new commit
+
+What git revert does is;
+it doesn't delete any commit
+	it creates; a new commit, keeps full history
+
+git revert creates a new commit that removes the changes made by another commit
+
+git revert <commit-id>
+git revert HEAD
+
+
+
+
