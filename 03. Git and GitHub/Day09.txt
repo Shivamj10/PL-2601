@@ -1,0 +1,97 @@
+Module 2: Git and GitHub | Day 09 | 15-01-2025
+============================================================================================================
+=> Recovering a deleted file
+Case 1: Deleted but not staged
+			git restore hello.txt
+
+Case 2: Deleted and staged
+			git restore --staged hello.txt
+			git restore hello.txt
+
+Case 3: Deleted, Staged and Committed
+			git restore --source=a02c663 -- hello.txt
+
+Case 4: If you dont know the file name
+			git log --diff-filter=D --summary
+			git restore --source=b24cb86 -- recover.txt
+
+=> Introduction to GitHub 
+GitHub is a cloud server
+It is used to store the source code of the application
+GitHub is GUI based
+
+In GitHub we will create repositories
+Repository is nothing but a folder in cloud
+
+In GitHub we can create 2 types of repos;
+	Public Repo		- the files available in public repo can be accessed by anyone on the browser
+	Private Repo		- the files available in private repo can only be accessed by the repo owner and also access can be given to individuals using their GitHub email ids
+
+For every repo we will have repo URL.
+Using repo URL we can directly access the data inside that particular repo
+
+Types of repo URLs;
+	HTTPS
+	SSH
+
+=> Pushing the code from local to remote
+		git push
+
+=> Cloning a repo
+To get the code available from remote repo to local
+		git clone <Repo.URL>
+
+Note: When we clone a repo, no need to initialize git again.
+Note: In git bash terminal the default branch is master
+Note: In GitHub, the default branch is main
+
+==> Git Branches
+amazon ----> movies, documentaries, sports, sci-fi
+movies --- dev1 --- responsible to develop movies feature --- write the code
+documentaries --- dev2 --- responsible to develop documentaries feature --- write the code
+sports --- dev3 --- responsible to develop sprots feature --- write the code
+sci-fi --- dev4 --- responsible to develop sci-fi feature --- write the code
+
+Repo Name: amazon-app
+
+All the developers will push the code to the same repo
+Developers will create Branches - for each of the app, developers will create a branch and then each feature code will be pushed to that particular branch
+
+Branches are used to isolate the source code the features available in an application
+
+Note: the default branch is master/main
+
+git branch ---> to see the list of branches available in local
+git branch -r ---> to see the list of branches available in remote
+git branch -a ---> to see all the remote and local branches
+
+git branch movies-dev1
+
+GIT PULL
+git pull is used to pull the changes from remote to local
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+How to set the passcode for the GitHub account?
+Download Google Authenticator App in Mobile
