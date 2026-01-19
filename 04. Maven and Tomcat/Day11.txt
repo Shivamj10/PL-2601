@@ -1,0 +1,151 @@
+Module 3: Maven & Tomcat | Day 11 | 18-01-2025
+============================================================================================================
+Maven is a build tool that is used to create the initial project folder structure to develop the source code of the application - developers perspective.
+Maven is a build tool that is used to build and package the source code of the application - DevOps engineers perspective
+Based on the programming languages we have different build tools;
+	Java		---> Maven
+	Python		---> PyBuilder
+	Ruby		---> Rakes
+	.net			---> MS Build
+Ant, Gradle...
+
+Maven is used for the projects which are developed by using Java Programming Language.
+Maven is also known as Java Build Tool
+Maven is an Open Source s/f and is available for free of cost
+
+Features of Maven;
+1. Using Maven we can create the initial project folder structure
+
+2. Using Maven we can download the "dependencies" that are required to develop the project
+Chicken Biryani ----> Chicken, Rice (main ingredients)
+				----> Masala, Curry leaves.... (additional items to bring taste to the Biryani)
+
+Netflix		----> Java
+			----> Dependencies (Context, Spring, SpringBoot...)
+
+How maven will download the dependencies?
+When we create initial project folder structure, we will have a file which is known as "pom.xml" file
+POM - Project Object Model
+XML - Extension Markup Language
+In the pom.xml file we are going to configure the dependencies which are required for our application
+All the dependencies required to develop any application are available in a website "mvnrepository.com"
+
+3. Using Maven we can compile the source code of the application
+netflix.java	----> Source code of the app	----> Human understandable format
+
+public class HelloWorld {
+    public static void main(String[] args) {
+        System.out.println("Hello, World!");
+    }
+}
+
+Machines cannot understand our language ----> Covert the human understandable language into the machine understandable language ----> MAVEN
+
+The process of converting the human understandable language into the machine understandable language is known as Compilation
+
+netflix.java	----> Source code of the app	----> Human understandable format ----> Compile	----> netflix.class ----> We can execute the code ---> Output of the app
+
+				compile							execute
+.java	--------------------------------------> .class --------------------------------------> JVM --------------------------------------> Output
+
+Note: When we are working with Maven, it is mandatory to install Java in the machine
+
+4. Using Maven we can package the entire source code as a single file. Once we have the packaged file, we can run/deploy that packaged file into the servers, so that app is accessible 
+
+1000 .java files -----------------> 1000 .class files --------------> Packaging
+3 types of applications;
+Standalone application	- limited to a particular device		- Artifact (.jar) Java Archive 
+Web application			- real-time applications			- Artifact (.war) Web Archive 
+Enterprise application	- real-time applications			- Artifact (.ear) Enterprise Arhive
+
+Working with Maven
+sudo dnf update -y
+sudo dnf install -y java-21-amazon-corretto-devel
+
+yum install maven -y
+
+Creating a project folder structure for standalone application;
+mvn archetype:generate \
+  -DgroupId=com.kastro.app \
+  -DartifactId=standalone-app \
+  -DarchetypeArtifactId=maven-archetype-quickstart \
+  -DarchetypeVersion=1.4 \
+  -DinteractiveMode=false
+
+
+Creating a project folder structure for web application;
+mvn archetype:generate \
+  -DgroupId=com.kastro.web \
+  -DartifactId=web-app \
+  -DarchetypeArtifactId=maven-archetype-webapp \
+  -DarchetypeVersion=1.4 \
+  -DinteractiveMode=false
+
+Maven Goals (Lifecycle);
+clean - mvn clean** - it will delete exisiting "target" folder
+compile - mvn compile** - it will compile the source code of the app (.java ---> .class) --- target folder will get created, inside we will have .class files
+test - mvn test - it will perform the unit test execution of the source code
+package - mvn package** - it will package the artifacts (.jar/.war/.ear) --- artifacts will be available inside the target folder
+install - mvn install - it is used to install the project as a dependency
+
+Version 1.0	----> artifact version 1 ---> war1.0
+Version 2.0	----> artifact version 2 ---> war2.0
+Version 3.0 	----> artifact version 3 ---> war3.0	----> Current deployment
+
+Artifact Repo Tools ----> these tools are used to store the artifacts of older versions of the application ---> Ex: Nexus, JFrog, AWS - S3 (Bucket)
+
+Note: All maven goals should be executed from the location where pom.xml file is available
+
+Understanding "1.0-SNAPSHOT"
+In real-time, if you see "SNAPSHOT" in the pom.xml file, this means the source code of the app is still in the development process
+In real-time, if you see "RELEASE" in the pom.xml file, this means the source code of the app is developed and is ready for deployment
+
+Maven Repositories;
+Local Repo		- .m2 - the dependencies are available
+Central Repo	- mvnrepository.com - all the project dependencies are available here
+Remote Repo	- all the artifacts of the application will be stored here. Ex: Nexus, JFrog, S3, Azure Storage...
+
+=======================================================================================================
+TOMCAT
+
+Types of deployments;
+Manual Deployment			- generating the artifact - deploying the artifact manually into the server
+Automated Deployment
+
+To deploy java web applications, we will use different web servers;
+	Apache Tomcat**, JBoss, WebLogic, WebSphere
+
+To work with Tomcat, we need to install Java
+Apache owns Tomcat - Apache is name of the organization. Tomcat is the name of the server
+Tomcat is free and open-source software which is used to deploy java web applications
+By default, Tomcat runs on Port Number 8080
+
+Downloading the Tomcat;
+https://tomcat.apache.org/download-90.cgi
+
+wget https://dlcdn.apache.org/tomcat/tomcat-9/v9.0.113/bin/apache-tomcat-9.0.113.tar.gz
+
+Extract the tar file;
+
+Tomcat Directory Structure;
+BIN - it contains the files which are required to start and stop the tomcat server
+		.sh files	- Linux		- startup.sh, shutdown.sh
+		.bat files	- windows	- startup.bat, shutdown.bat
+
+CONF - it contains the configuration files
+			server.xml
+			tomcat-users.xml
+
+LIB - Library files (all standalone app deployments will happen inside library directory)
+
+LOGS - it contains server logs
+
+TEMP - it contains the temporary data
+
+WEBAPPS - inside this directory we will do war file deployments
+		host-manager	--- context.xml (/webapps/host-manager/META-INF)
+		manager		--- context.xml (webapps/manager/META-INF)
+
+
+
+
