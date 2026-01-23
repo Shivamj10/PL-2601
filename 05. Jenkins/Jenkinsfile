@@ -1,0 +1,38 @@
+pipeline {
+    agent any
+
+    stages {
+        stage("Git Checkout") {
+            steps {
+                git 'https://github.com/KastroVKiran/Netflix-Pipeline-Project.git'
+            }
+        }
+        stage("Build and Package") {
+            steps {
+                sh "mvn clean package -T 1C -DskipTests"
+            }
+        }
+        stage("Download/Archive Artifact") {
+            steps {
+                archiveArtifacts artifacts: 'target/*.war', fingerprint: true
+            }
+        }
+        stage("Upload Artifact to S3") {
+            steps {
+                sh """
+                    aws s3 cp target/NETFLIX-1.2.2.war \
+                    s3://my-s3-artifact-prime-app/NETFLIX-${BUILD_NUMBER}.war \
+                    --region ap-south-1
+
+                """
+            }
+        }
+        stage("Tomcat Deployment") {
+            steps {
+                script {
+                    sh "sudo cp target/NETFLIX-1.2.2.war /home/ec2-user/apache-tomcat-9.0.113/webapps"
+                }
+            }
+        }
+    }
+}
