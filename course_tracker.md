@@ -47,5 +47,10 @@ A comprehensive 35-day DevOps training program covering essential tools and prac
 |------|--------|----------------|--------|
 | **20 Jan 2026** | Jenkins | Introduction to CI&CD, Jenkins, Jobs and Types, Understanding Freestyle Projects - Job Creation, Configuration, Integration of Public GitHub repo, Upstream & Downstream, Throttle Builds  | ✅ Completed |
 | **22 Jan 2026** | Jenkins | Build Triggers, Parameterized Jobs, Freestyle Project 1 (CI &C CD), Changing Tomcat Port Number, Discard old builds, Integrating Private Repo, Storing Artifacts in S3 Bucket | ✅ Completed |
-| **23 Jan 2026** | Jenkins | Pipeline, Scenarios in Pipelines, Downloading Artifacts to local, to S3, Picking up specific artifact, Login to jenkins without password, Jenkins Recover Deleted Job, Master and Slave Architecture | ✅ Completed |
+| **23 Jan 2026** | Jenkins | Pipeline, Scenarios in Pipelines, Downloading Artifacts to local, to S3, Login to jenkins without password, Jenkins Recover Deleted Job, Master and Slave Architecture | ✅ Completed |
 | **26 Jan 2026** | Jenkins | Yet to discuss | ⏳ Pending |
+
+### **Phase 5: Docker (Working with Containers)** 
+| Date | Module | Topics Covered | Status |
+|------|--------|----------------|--------|
+| **27 Jan 2026** | Docker | Yet to discuss | ⏳ Pending |
