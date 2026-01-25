@@ -54,11 +54,12 @@ A comprehensive 35-day DevOps training program covering essential tools and prac
 | Date | Module | Topics Covered | Status |
 |------|--------|----------------|--------|
 | **27 Jan 2026** | Docker | Yet to discuss | ⏳ Pending |
-| **28 Jan 2026** | Docker | Yet to discuss | ⏳ Pending |
+| **29 Jan 2026** | Docker | Yet to discuss | ⏳ Pending |
 | **30 Jan 2026** | Docker | Yet to discuss | ⏳ Pending |
-| **31 Jan 2026** | Docker | Yet to discuss | ⏳ Pending |
+| **02 Feb 2026** | Docker | Yet to discuss | ⏳ Pending |
+| **03 Feb 2026** | Docker | Yet to discuss | ⏳ Pending |
 
 ### **Phase 6: Kubernetes (Managing the Containers)** 
 | Date | Module | Topics Covered | Status |
 |------|--------|----------------|--------|
-| **02 Feb 2026** | Kubernetes | Yet to discuss | ⏳ Pending |
+| **05 Feb 2026** | Kubernetes | Yet to discuss | ⏳ Pending |
