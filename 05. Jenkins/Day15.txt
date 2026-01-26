@@ -1,0 +1,360 @@
+Module 4: Jenkins | Day 15 | 26-01-2025
+============================================================================================================
+Installation of Jenkins
+------------------------------------------
+https://www.jenkins.io/doc/book/installing/linux/
+
+sudo dnf install -y java-21-amazon-corretto-devel
+sudo wget -O /etc/yum.repos.d/jenkins.repo \
+    https://pkg.jenkins.io/redhat-stable/jenkins.repo
+sudo rpm --import https://pkg.jenkins.io/redhat-stable/jenkins.io-2023.key
+sudo yum upgrade
+sudo yum install jenkins
+sudo systemctl daemon-reload
+sudo systemctl enable jenkins
+sudo systemctl start jenkins
+sudo systemctl status jenkins
+
+=> Build Executor Status
+How many number of jobs you can run parallelly in Jenkins is defined under Build Executor Status
+By default the Build Executor Status is 2
+Cannot be > 5
+
+=> Disk Space Monitoring Thresholds
+This is used to setup the memory for small instance types
+
+=> Changing the Jenkins port number
+sudo systemctl restart jenkins
+Open the new port number in SG of VM
+Access the Jenkins on new port number [PublicIP:<NewPortNumber>]
+
+=> Email Notifications
+kastrokiran@gmail.com	----> Generate App Password
+
+=> RBAC
+Roll Based Access Control
+person1	- 7 years		- Jenkins Full Access
+person2	- 5 years		- Jenkins Full Access
+person3	- 3 years		- Create a job, Configure the job
+person4	- 1 year		- Build a job
+
+Jenkins Users	----> Setup the permissions	----> You will give IP and Port Number		----> Access the Jenkins with limited permissions
+
+By default when we create user in Jenkins, that user will get administrator permissions
+
+
+=> Jenkins Final Project
+Jenkins + GitHub + Maven + Nexus + S3 Bucket + SonarQube + Tomcat
+
+Jenkins - Amazon Linux 2023 (t2.medium)
+SonarQube - Amazon Linux 2023 (t2.medium)
+Nexus - Amazon Linux 2023 (t2.medium)
+Tomcat - - Amazon Linux 2023 (t2.micro)
+
+Nexus - store the artifacts	- 8081
+SonarQube - code quality analysis	- 9000
+
+We will setup Nexus and SonarQube using docker container ---> Install docker ----> Create a docker container
+
+
+==> Tomcat Setup
+<Context antiResourceLocking="false" privileged="true">
+  <Valve className="org.apache.catalina.valves.RemoteAddrValve"
+         allow="^.*$" />
+</Context>
+
+Repo URL: https://github.com/KastroVKiran/tomcat-app-kastro.git
+
+  <role rolename="manager-gui"/>
+  <role rolename="admin-gui"/>
+  <role rolename="manager-script"/>
+  <user username="tomcat" password="tomcat" roles="manager-gui"/>
+  <user username="admin" password="admin" roles="manager-gui,admin-gui,manager-script"/>
+
+
+Nexus Setup;
+Lets setup the Docker. And then using Docker, we will setup Nexus.
+
+sudo dnf update -y
+sudo dnf install -y docker
+sudo systemctl start docker
+sudo systemctl enable docker
+
+docker --version ---> You can see the docker version
+
+Install Nexus
+docker run -d -p 8081:8081 --name nexus sonatype/nexus3
+
+SonarQube Setup;
+sudo dnf update -y
+sudo dnf install -y docker
+sudo systemctl start docker
+sudo systemctl enable docker
+
+docker --version ---> You can see the docker version
+
+#Lets run docker commands to install SonarQube
+$ docker run -d --name sonarqube -p 9000:9000 sonarqube:lts-community
+
+
+Build 1 ----> Artifact version 1
+Build 2 ----> Artifact version 2
+
+pipeline {
+    agent any
+    tools {
+        maven 'maven3'
+    }
+    stages {
+        stage('Git Checkout') {
+            steps {
+                git credentialsId: 'github-creds', url: 'https://github.com/KastroVKiran/my-prime-v2.git'
+            }
+        }
+        stage('Maven Compile') {
+            steps {
+                sh 'mvn compile'
+            }
+        }
+        stage('Maven Test') {
+            steps {
+                sh 'mvn test'
+            }
+        }
+        stage('Maven Artifact') {
+            steps {
+                sh 'mvn clean package'
+            }
+        }
+        stage('Artifacts to Nexus') {
+            steps {
+                nexusArtifactUploader artifacts: [[artifactId: 'amazon-prime-clone', classifier: '', file: 'target/amazon-prime-clone.war', type: 'war']], credentialsId: 'nexus-creds', groupId: 'com.amazonprime', nexusUrl: '52.66.205.63:8081', nexusVersion: 'nexus3', protocol: 'http', repository: 'prime-app', version: '2.0.1'
+            }
+        }
+        stage('Artifacts to S3') {
+            steps {
+                s3Upload consoleLogLevel: 'INFO', dontSetBuildResultOnFailure: false, dontWaitForConcurrentBuildCompletion: false, entries: [[bucket: 'my-s3-artifact-prime-app', excludedFile: '', flatten: false, gzipFiles: false, keepForever: false, managedArtifacts: false, noUploadOnFailure: false, selectedRegion: 'ap-south-1', showDirectlyInBrowser: false, sourceFile: '**/*.war', storageClass: 'STANDARD', uploadFromSlave: false, useServerSideEncryption: false]], pluginFailureResultConstraint: 'FAILURE', profileName: 's3-artifacts', userMetadata: []
+            }
+        }
+        stage('SonarQube Analysis') {
+            steps {
+                withSonarQubeEnv('sonarqube-server') {
+                    sh 'mvn sonar:sonar'
+                }
+            }
+        }
+        stage('Tomcat Deployment') {
+            steps {
+                deploy adapters: [tomcat9(alternativeDeploymentContext: '', credentialsId: 'tomcat-creds', path: '', url: 'http://3.110.187.91:8080/')], contextPath: 'prime-app', war: '**/*.war'
+            }
+        }
+    }
+}
+
+Version 2.0.1 ----> Prime Original
+Version 2.0.2 ----> Prime Originalsss
+Version 2.0.3 ----> By the time the new version is developed (to fix the bug), we need to deploy atleast the next old version of the app
+
+Take the Version 2.0.1 artifact and deploy it
+
+==> Pick a Specific Version for Deployment
+Currently we have 2 versions of war files (lets say version 2.0.0, 2.0.1). Latest version which is currently deployed is 2.0.1.
+Lets  say i want to deploy old version i.e 2.0.0, use the below pipeline
+
+
+pipeline {
+    agent any
+    parameters {
+        choice(
+            name: 'ACTION',
+            choices: ['BUILD_NEW', 'DEPLOY_FROM_NEXUS'],
+            description: 'BUILD_NEW: Build and deploy new version\nDEPLOY_FROM_NEXUS: Deploy existing version from Nexus'
+        )
+        string(
+            name: 'NEXUS_VERSION',
+            defaultValue: '2.0.0',
+            description: 'Enter version to deploy from Nexus (e.g., 2.0.0, 2.0.1)'
+        )
+    }
+    tools {
+        maven 'maven3'
+    }
+    stages {
+        // === BUILD STAGES (Only for BUILD_NEW) ===
+        stage('Git Checkout') {
+            when {
+                expression { params.ACTION == 'BUILD_NEW' }
+            }
+            steps {
+                git credentialsId: 'github-creds', url: 'https://github.com/KastroVKiran/my-prime-v2.git'
+            }
+        }
+        stage('Compile') {
+            when {
+                expression { params.ACTION == 'BUILD_NEW' }
+            }
+            steps {
+                sh 'mvn compile'
+            }
+        } 
+        stage('Test') {
+            when {
+                expression { params.ACTION == 'BUILD_NEW' }
+            }
+            steps {
+                sh 'mvn test'
+            }
+        }
+        stage('Build Artifact') {
+            when {
+                expression { params.ACTION == 'BUILD_NEW' }
+            }
+            steps {
+                sh 'mvn clean package'
+            }
+        }
+        stage('Upload to Nexus') {
+            when {
+                expression { params.ACTION == 'BUILD_NEW' }
+            }
+            steps {
+                // Use fixed version (you can hardcode or use a parameter)
+                nexusArtifactUploader artifacts: [[
+                    artifactId: 'amazon-prime-clone', 
+                    classifier: '', 
+                    file: 'target/amazon-prime-clone.war', 
+                    type: 'war'
+                ]], 
+                credentialsId: 'nexus-creds', 
+                groupId: 'com.amazonprime', 
+                nexusUrl: '65.0.203.88:8081', 
+                nexusVersion: 'nexus3', 
+                protocol: 'http', 
+                repository: 'prime-app', 
+                version: '2.0.1'  // Hardcoded or use parameter
+                
+                echo "Uploaded artifact to Nexus"
+            }
+        }
+        stage('SonarQube Analysis') {
+            when {
+                expression { params.ACTION == 'BUILD_NEW' }
+            }
+            steps {
+                withSonarQubeEnv('sonarqube-server') {
+                    sh 'mvn sonar:sonar'
+                }
+            }
+        }
+        
+        // === DEPLOY FROM NEXUS STAGE (Only for DEPLOY_FROM_NEXUS) ===
+        stage('Download from Nexus') {
+            when {
+                expression { params.ACTION == 'DEPLOY_FROM_NEXUS' }
+            }
+            steps {
+                script {
+                    echo "Downloading version: ${params.NEXUS_VERSION} from Nexus"
+                    
+                    withCredentials([usernamePassword(
+                        credentialsId: 'nexus-creds',
+                        usernameVariable: 'NEXUS_USER',
+                        passwordVariable: 'NEXUS_PASS'
+                    )]) {
+                        // Download from Nexus
+                        sh """
+                            curl -f -L -u \$NEXUS_USER:\$NEXUS_PASS \
+                            "http://65.0.203.88:8081/repository/prime-app/com/amazonprime/amazon-prime-clone/${params.NEXUS_VERSION}/amazon-prime-clone-${params.NEXUS_VERSION}.war" \
+                            -o "deploy-from-nexus.war"
+                            
+                            echo "Downloaded file:"
+                            ls -lh deploy-from-nexus.war
+                        """
+                    }
+                }
+            }
+        }
+        
+        // === DEPLOY STAGE (Runs for both actions) ===
+        stage('Deploy to Tomcat') {
+            steps {
+                script {
+                    // Choose which WAR file to deploy
+                    if (params.ACTION == 'BUILD_NEW') {
+                        deploy adapters: [tomcat9(
+                            alternativeDeploymentContext: '', 
+                            credentialsId: 'tomcat-creds', 
+                            path: '', 
+                            url: 'http://13.232.124.124:8080'
+                        )], 
+                        contextPath: 'prime-app', 
+                        war: '**/*.war'
+                    } else if (params.ACTION == 'DEPLOY_FROM_NEXUS') {
+                        deploy adapters: [tomcat9(
+                            alternativeDeploymentContext: '', 
+                            credentialsId: 'tomcat-creds', 
+                            path: '', 
+                            url: 'http://13.232.124.124:8080'
+                        )], 
+                        contextPath: 'prime-app', 
+                        war: 'deploy-from-nexus.war'
+                    }
+                }
+            }
+        }
+    }
+    post {
+        success {
+            echo "Deployment completed successfully!"
+        }
+    }
+}
+
+
+=> Parallel Build Jobs;
+Lets say i have 5 stages in a pipeline, i want to run 3 stages parallelly to save time in that case we will use Parallel Build Jobs
+
+git checkout
+mvn compile
+mvn test
+mvn clean package
+store artifact to nexus
+perform code quality analysis
+deploy to tomcat
+
+pipeline {
+    agent any
+    stages {
+        stage('Sequential Stage 1') {
+            steps {
+                echo 'This runs FIRST (before parallel)'
+            }
+        }
+        
+        stage('Parallel Jobs') {
+            parallel {
+                stage('Task 1') {
+                    steps {
+                        echo 'Running Task 1 in parallel'
+                    }
+                }
+                stage('Task 2') {
+                    steps {
+                        echo 'Running Task 2 in parallel'
+                    }
+                }
+                stage('Task 3') {
+                    steps {
+                        echo 'Running Task 3 in parallel'
+                    }
+                }
+            }
+        }
+        
+        stage('Sequential Stage 2') {
+            steps {
+                echo 'This runs AFTER parallel (all 3 must finish first)'
+            }
+        }
+    }
+}
